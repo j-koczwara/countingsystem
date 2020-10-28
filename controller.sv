@@ -45,7 +45,7 @@ module controller(
 	localparam RE_A = 5'b00111;
 	localparam RE_B = 5'b01000;
 	localparam RE_C = 5'b01001;
-	localparam RE_D = 5'b10001;
+
 
 	localparam RZ_A = 5'b01010;
 	localparam RZ_B = 5'b01011;
@@ -53,7 +53,7 @@ module controller(
 	localparam RZ_D = 5'b01101;
 	localparam RZ_E = 5'b01110;
 	localparam RZ_F = 5'b10000;
-	localparam RZ_G = 5'b10010;
+
 	
 
 	reg [4:0] state=ID;
@@ -75,7 +75,7 @@ module controller(
 
 		case(state)
 			ID: begin
-				if(mode==3'b001 && hit_latched)
+				if(mode==3'b001)
 					next=DT_F;
 					
 				else if(mode==3'b010 && read)
@@ -111,10 +111,10 @@ module controller(
 			DT_C: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b0,  1'b1,  1'b1,  1'b1,  1'b0,  1'b0,   DT_D};
 			DT_D: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b0,  1'b1,  1'b1,  1'b0,  1'b0,  1'b0,   DT_E};
 			DT_E: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b0,  1'b1,  1'b1,  1'b0,  1'b1,  1'b0,   DT_F};
-			DT_F: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b0,  1'b1,  1'b1,  1'b0,  1'b0,  1'b0,   DT_G};
-			DT_G: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b1,  1'b0,  1'b0,  1'b0,  1'b0,  1'b1,   DT_A};
+			DT_F: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b0,  1'b1,  1'b1,  1'b0,  1'b0,  1'b1,   DT_G};
+			DT_G: {cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset, next} = {1'b1,  1'b0,  1'b0,  1'b0,  1'b0,  1'b0, hit_latched ? DT_B: DT_A};
 			DT_H:begin
-				{  cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset} =         {1'b1,  1'b0,  1'b1,  1'b0,  1'b0,  1'b0};
+				{  cntr_src,   mem_src,    reg_src,    mem_read,   mem_write,  hit_reset} =       {1'b1,  1'b0,  1'b1,  1'b0,  1'b0,  1'b0};
 				if(mode == 3'b001)					
 					if(hit_latched)
 						next=DT_B;
